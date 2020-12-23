@@ -14,7 +14,7 @@ namespace LargestLineSumTests
         public void IsFilePathValid_Valid_File()
         {
             Program program = new Program();
-            string input = @"c:\text.txt";//an actual file
+            string input = @"text.txt";//an actual file
             Assert.IsTrue(program.IsFileValid(input));
         }
 
@@ -22,14 +22,14 @@ namespace LargestLineSumTests
         public void IsFilePathValid_Invalid_File()
         {
             Program program = new Program();
-            string input = @"c:\nothing.txt";
+            string input = @"nothing.txt";
             Assert.IsFalse(program.IsFileValid(input));
         }
 
         [TestMethod]
         public void GetLargestLineSumLine_Highest_Line_Sum()
         {
-            string input = @"c:\text.txt";
+            string input = @"text.txt";
             LineReader lineReader = new LineReader(input);
             //file contents:
             //1,2,3,4,5
@@ -45,7 +45,7 @@ namespace LargestLineSumTests
         [TestMethod]
         public void GetLargestLineSumLine_Empty_File()
         {
-            string input = @"c:\empty.txt";
+            string input = @"empty.txt";
             LineReader lineReader = new LineReader(input);
             //file contents:
             //
@@ -57,7 +57,7 @@ namespace LargestLineSumTests
         [TestMethod]
         public void GetLargestLineSumLine_No_Valid_Lines()
         {
-            string input = @"c:\bad.txt";
+            string input = @"bad.txt";
             LineReader lineReader = new LineReader(input);
             //file contents:
             //1,2,!,4,5
@@ -73,7 +73,7 @@ namespace LargestLineSumTests
         [TestMethod]
         public void GetLargestLineSumLine_Invalid_Lines()
         {
-            string input = @"c:\text.txt";
+            string input = @"text.txt";
             LineReader lineReader = new LineReader(input);
             //file contents:
             //1,2,3,4,5
@@ -89,7 +89,7 @@ namespace LargestLineSumTests
         [TestMethod]
         public void GetLargestLineSumLine_Empty_File_Invalid_Lines()
         {
-            string input = @"c:\empty.txt";
+            string input = @"empty.txt";
             LineReader lineReader = new LineReader(input);
             //file contents:
             //

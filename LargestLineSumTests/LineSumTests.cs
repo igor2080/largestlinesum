@@ -37,6 +37,10 @@ namespace LargestLineSumTests
             //1,2,3,4,e
             //100,200,300,400,500
             //100,200,300,400,,500
+            //1.1,1.2,1,3.1,5,1.4
+            //10000.5,1,2,3,100.
+            //1.e,1.2,1.3
+            //1.0,2.0,3.0,4.0,5.0
             int expectedResult = 4;
             int actualResult = lineReader.GetLargestLineSumLine(out List<int> invalidLines);
             Assert.AreEqual(expectedResult, actualResult);
@@ -81,7 +85,11 @@ namespace LargestLineSumTests
             //1,2,3,4,e
             //100,200,300,400,500
             //100,200,300,400,,500
-            var expectedResult = new List<int> { 2, 3, 5 };
+            //1.1,1.2,1,3.1,5,1.4
+            //10000.5,1,2,3,100.
+            //1.e,1.2,1.3
+            //1.0,2.0,3.0,4.0,5.0
+            var expectedResult = new List<int> { 2, 3, 5, 7, 8 };
             lineReader.GetLargestLineSumLine(out List<int> actualResult);
             Assert.IsTrue(expectedResult.SequenceEqual(actualResult));
         }

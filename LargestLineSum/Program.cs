@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace LargestLineSum
 {
@@ -42,12 +43,12 @@ namespace LargestLineSum
 
         public bool PromptTryAgain()
         {
-            Console.WriteLine("Would you like to input a new matrix? Type 1 to restart or anything else to exit: ");
+            Console.WriteLine("Would you like to input a new file? Type 1 to restart or anything else to exit: ");
             return Console.ReadLine() == ContinueKey;
         }
 
         public static void Main(string[] args)
-        {
+        {            
             Program program = new Program();
             do
             {

@@ -9,33 +9,14 @@ namespace LargestLineSum
     public class Program
     {
         const string ContinueKey = "1";
-        public bool IsFileValid(string path)
-        {
-            return File.Exists(path);
-        }
 
-        public void Start(string[] args)
+        public void Start(string arg = "")
         {
             string filePath;
             LineReader lineReader;
-
-            if (args.Length < 1)
-            {
-                Console.WriteLine("Please enter a file path: ");
-                filePath = Console.ReadLine();
-            }
-            else
-            {
-                filePath = args[0];
-            }
-
-            while (!IsFileValid(filePath))
-            {
-                Console.WriteLine("The given file is invalid or does not exist. Please enter a new path or press ctrl+c to exit: ");
-                filePath = Console.ReadLine();
-            }
-
-            lineReader = new LineReader(filePath);
+            filePath = FileProcessor.ValidateFileInput(arg);
+            lineReader = new LineReader();
+            lineReader.SetFile(filePath);
             int largestLine = lineReader.GetLargestLineSumLine(out List<int> invalidLines);
             Console.WriteLine($"The largest number sum was found on line {largestLine}");
             Console.WriteLine($"The lines with bad text are: {string.Join(',', invalidLines)}");
@@ -48,12 +29,14 @@ namespace LargestLineSum
         }
 
         public static void Main(string[] args)
-        {            
+        {
             Program program = new Program();
             do
             {
-                program.Start(args);
-                args = new string[] { };
+                if (args.Length > 0)
+                    program.Start(args[0]);
+                else
+                    program.Start();
             } while (program.PromptTryAgain());
         }
     }

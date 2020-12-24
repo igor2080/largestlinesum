@@ -9,18 +9,16 @@ namespace LargestLineSum
 {
     public class LineReader
     {
-        private readonly string _filePath;
-        private readonly FileExtractor _file;
-        public LineReader(string filePath)
+        private FileProcessor _file;
+        public void SetFile(string filePath)
         {
-            _filePath = filePath;
-            _file = new FileExtractor(_filePath);
+            _file = new FileProcessor(filePath);
         }
         public int GetLargestLineSumLine(out List<int> invalidLines)
         {
-            double numberSum = 0;
+            double largestSum = 0;
             double currentSum = 0;
-            int largestLine = 0;
+            int largestSumLine = 0;
             int currentLineNumber = 1;
             invalidLines = new List<int>();
             string[] splitLine;
@@ -28,13 +26,13 @@ namespace LargestLineSum
             for (int i = 0; i < _file.GetFileText.Length; i++)
             {
                 splitLine = _file.GetFileText[i].Split(',');
-                if (splitLine.All(x => Regex.IsMatch(x, @"^-?[0-9]*\.?[0-9]+$")))
+                if (!splitLine.Any(x => !Regex.IsMatch(x, @"^-?[0-9]*\.?[0-9]+$")))
                 {
                     currentSum = splitLine.Sum(x => double.Parse(x));
-                    if (currentSum > numberSum)
+                    if (currentSum > largestSum)
                     {
-                        numberSum = currentSum;
-                        largestLine = currentLineNumber;
+                        largestSum = currentSum;
+                        largestSumLine = currentLineNumber;
                     }
                 }
                 else
@@ -44,7 +42,7 @@ namespace LargestLineSum
                 currentLineNumber++;
             }
 
-            return largestLine;
+            return largestSumLine;
         }
 
     }

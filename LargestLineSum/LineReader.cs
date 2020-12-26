@@ -9,23 +9,20 @@ namespace LargestLineSum
 {
     public class LineReader
     {
-        private FileProcessor _file;
-        public void SetFile(string filePath)
+        public int GetLargestLineSumLine(string filePath, out List<int> invalidLines)
         {
-            _file = new FileProcessor(filePath);
-        }
-        public int GetLargestLineSumLine(out List<int> invalidLines)
-        {
+            FileProcessor currentFile = new FileProcessor(filePath);
+            invalidLines = new List<int>();
             double largestSum = 0;
             double currentSum = 0;
             int largestSumLine = 0;
-            int currentLineNumber = 1;
-            invalidLines = new List<int>();
+            int currentLineNumber = 1;            
             string[] splitLine;
 
-            for (int i = 0; i < _file.GetFileText.Length; i++)
+            for (int i = 0; i < currentFile.GetFileText.Length; i++)
             {
-                splitLine = _file.GetFileText[i].Split(',');
+                splitLine = currentFile.GetFileText[i].Split(',');
+
                 if (!splitLine.Any(x => !Regex.IsMatch(x, @"^-?[0-9]*\.?[0-9]+$")))
                 {
                     currentSum = splitLine.Sum(x => double.Parse(x));

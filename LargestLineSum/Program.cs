@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace LargestLineSum
@@ -13,13 +14,26 @@ namespace LargestLineSum
         public void Start(string arg = "")
         {
             string filePath;
-            LineReader lineReader;
-            filePath = FileProcessor.ValidateFileInput(arg);
-            lineReader = new LineReader();
-            lineReader.SetFile(filePath);
-            int largestLine = lineReader.GetLargestLineSumLine(out List<int> invalidLines);
-            Console.WriteLine($"The largest number sum was found on line {largestLine}");
+            LineReader lineReader = new LineReader();
+
+            if (string.IsNullOrWhiteSpace(arg))
+                filePath = GetValidUserInput();
+            else
+                filePath = arg;
+
+            int largestLine = lineReader.GetLargestLineSumLine(filePath, out List<int> invalidLines);
+
+            if (largestLine > 0)
+                Console.WriteLine($"The largest number sum was found on line {largestLine}");
+            else
+                Console.WriteLine($"No lines with only numbers found");
+
             Console.WriteLine($"The lines with bad text are: {string.Join(',', invalidLines)}");
+        }
+
+        public bool IsArgumentValidFile(string arg)
+        {
+            return FileProcessor.IsFileValid(arg);
         }
 
         public bool PromptTryAgain()
@@ -28,12 +42,30 @@ namespace LargestLineSum
             return Console.ReadLine() == ContinueKey;
         }
 
+        public string GetValidUserInput()
+        {
+            Console.WriteLine("Please enter a path with a valid file: ");
+            string filePath = Console.ReadLine();
+
+            while (!FileProcessor.IsFileValid(filePath))
+            {
+                Console.WriteLine("The given file is invalid or does not exist. Please enter a valid path or press ctrl+c to exit: ");
+                filePath = Console.ReadLine();
+            }
+
+            return filePath;
+        }
+
+
         public static void Main(string[] args)
         {
+            Console.InputEncoding = Encoding.Unicode;
+            Console.OutputEncoding = Encoding.Unicode;
             Program program = new Program();
+
             do
             {
-                if (args.Length > 0)
+                if (args.Length > 0 && program.IsArgumentValidFile(args[0]))
                     program.Start(args[0]);
                 else
                     program.Start();

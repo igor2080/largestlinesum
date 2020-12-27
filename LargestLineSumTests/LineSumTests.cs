@@ -10,38 +10,51 @@ namespace LargestLineSumTests
     [TestClass]
     public class LineSumTests
     {
-        [TestMethod]
-        public void IsFileValid_Valid_File()
+        private Program _program;
+        private const string FileName = "text.txt";        
+        private LineReader _lineReader;
+        private FileProcessor _fileProcessor;
+
+        [TestInitialize]
+        public void LineSumInit()
         {
-            File.CreateText("text.txt").Close();
-            string input = "text.txt";
-            Assert.IsTrue(FileProcessor.IsFileValid(input));
-            File.Delete("text.txt");
+            _program = new Program();
+            _lineReader = new LineReader();
+            _fileProcessor = new FileProcessor();
+            File.CreateText(FileName).Close();
+        }
+
+        [TestCleanup]
+        public void LineSumClean()
+        {
+            File.Delete(FileName);
+        }
+
+        [TestMethod]        
+        public void IsFilePathValid_Valid_File_Paths()
+        {                                    
+            Assert.IsTrue(_fileProcessor.IsFilePathValid(FileName));
+            Assert.IsTrue(_fileProcessor.IsFilePathValid(@"c:\"+FileName));
+            Assert.IsTrue(_fileProcessor.IsFilePathValid("text"));
         }
 
         [TestMethod]
-        public void IsFileValid_Invalid_File()
-        {
-            string input = "nothing.txt";
-            Assert.IsFalse(FileProcessor.IsFileValid(input));
+        public void IsFilePathValid_Invalid_File_Path()
+        {          
+            Assert.IsFalse(_fileProcessor.IsFilePathValid(FileName+@">"));
         }
 
         [TestMethod]
-        public void GetUserInput_ValidFile()
-        {
-            File.CreateText("text.txt").Close();
-            Program program = new Program();
-            Console.SetIn(new StringReader(@"text.txt"));
-            string expectedResult = "text.txt";
-            string actualResult = program.GetValidUserInput();
-            Assert.AreEqual(expectedResult, actualResult);
-            File.Delete("text.txt");
+        public void GetFileText_Valid_File()
+        {                        
+            string[] result = _fileProcessor.GetFileText(FileName);
+            Assert.IsNotNull(result);
         }
 
         [TestMethod]
         public void GetLargestLineSumLine_Highest_Line_Sum()
         {
-            using (var tempFile = File.CreateText("text.txt"))
+            using (StreamWriter tempFile = File.CreateText(FileName))
             {
                 tempFile.Write("1,2,3,4,5\n" +
                     "er,qwe\n" +
@@ -53,31 +66,26 @@ namespace LargestLineSumTests
                     "1.e,1.2,1.3\n" +
                     "1.0,2.0,3.0,4.0,5.0");
             }
-
-            string input = "text.txt";
-            LineReader lineReader = new LineReader();
+            
             int expectedResult = 4;
-            int actualResult = lineReader.GetLargestLineSumLine(input, out List<int> invalidLines);
+            string[] fileText = _fileProcessor.GetFileText(FileName);
+            int actualResult = _lineReader.GetLargestLineSumLine(fileText, out List<int> invalidLines);
             Assert.AreEqual(expectedResult, actualResult);
-            File.Delete("text.txt");
         }
 
         [TestMethod]
         public void GetLargestLineSumLine_Empty_File()
-        {
-            File.CreateText("empty.txt").Close();
-            string input = "empty.txt";
-            LineReader lineReader = new LineReader();
+        {                        
             int expectedResult = 0;
-            int actualResult = lineReader.GetLargestLineSumLine(input, out List<int> invalidLines);
+            string[] fileText = _fileProcessor.GetFileText(FileName);
+            int actualResult = _lineReader.GetLargestLineSumLine(fileText, out List<int> invalidLines);
             Assert.AreEqual(expectedResult, actualResult);
-            File.Delete("empty.txt");
         }
 
         [TestMethod]
         public void GetLargestLineSumLine_No_Valid_Lines()
         {
-            using (var tempFile = File.CreateText("bad.txt"))
+            using (StreamWriter tempFile = File.CreateText(FileName))
             {
                 tempFile.Write("1,2,!,4,5\n" +
                     "er,qwe\n" +
@@ -85,19 +93,17 @@ namespace LargestLineSumTests
                     "100,?,300,400,500\n" +
                     "100,200,300,400,,500");
             }
-
-            string input = "bad.txt";
-            LineReader lineReader = new LineReader();
+            
             int expectedResult = 0;
-            int actualResult = lineReader.GetLargestLineSumLine(input, out List<int> invalidLines);
+            string[] fileText = _fileProcessor.GetFileText(FileName);
+            int actualResult = _lineReader.GetLargestLineSumLine(fileText, out List<int> invalidLines);
             Assert.AreEqual(expectedResult, actualResult);
-            File.Delete("bad.txt");
         }
 
         [TestMethod]
         public void GetLargestLineSumLine_Invalid_Lines()
-        {
-            using (var tempFile = File.CreateText("text.txt"))
+        {            
+            using (StreamWriter tempFile = File.CreateText(FileName))
             {
                 tempFile.Write("1,2,3,4,5\n" +
                     "er,qwe\n" +
@@ -109,25 +115,20 @@ namespace LargestLineSumTests
                     "1.e,1.2,1.3\n" +
                     "1.0,2.0,3.0,4.0,5.0");
             }
-
-            string input = "text.txt";
-            LineReader lineReader = new LineReader();
+            
             var expectedResult = new List<int> { 2, 3, 5, 7, 8 };
-            lineReader.GetLargestLineSumLine(input, out List<int> actualResult);
+            string[] fileText = _fileProcessor.GetFileText(FileName);
+            _lineReader.GetLargestLineSumLine(fileText, out List<int> actualResult);
             Assert.IsTrue(expectedResult.SequenceEqual(actualResult));
-            File.Delete("text.txt");
         }
 
         [TestMethod]
         public void GetLargestLineSumLine_Empty_File_Invalid_Lines()
-        {
-            File.CreateText("empty.txt").Close();
-            string input = "empty.txt";
-            LineReader lineReader = new LineReader();
+        {                        
             var expectedResult = new List<int> { };
-            lineReader.GetLargestLineSumLine(input, out List<int> actualResult);
+            string[] fileText = _fileProcessor.GetFileText(FileName);
+            _lineReader.GetLargestLineSumLine(fileText, out List<int> actualResult);
             Assert.IsTrue(expectedResult.SequenceEqual(actualResult));
-            File.Delete("empty.txt");
         }
     }
 }

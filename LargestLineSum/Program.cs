@@ -1,28 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace LargestLineSum
 {
     public class Program
     {
         const string ContinueKey = "1";
+        private readonly LineReader _lineReader = new LineReader();
+        private readonly FileProcessor _fileProcessor = new FileProcessor();
 
-        public void Start(string arg = "")
+        public void Start()
         {
-            string filePath;
-            LineReader lineReader = new LineReader();
+            string[] currentFile;
+            do
+            {
+                currentFile = GetFileFromUserInput();
+                int largestLine = _lineReader.GetLargestLineSumLine(currentFile, out List<int> invalidLines);
+                PrintStats(largestLine, invalidLines);
+            }
+            while (PromptTryAgain());
+        }
 
-            if (string.IsNullOrWhiteSpace(arg))
-                filePath = GetValidUserInput();
-            else
-                filePath = arg;
-
-            int largestLine = lineReader.GetLargestLineSumLine(filePath, out List<int> invalidLines);
-
+        private static void PrintStats(int largestLine, List<int> invalidLines)
+        {
             if (largestLine > 0)
                 Console.WriteLine($"The largest number sum was found on line {largestLine}");
             else
@@ -31,45 +37,61 @@ namespace LargestLineSum
             Console.WriteLine($"The lines with bad text are: {string.Join(',', invalidLines)}");
         }
 
-        public bool IsArgumentValidFile(string arg)
-        {
-            return FileProcessor.IsFileValid(arg);
-        }
-
-        public bool PromptTryAgain()
+        private bool PromptTryAgain()
         {
             Console.WriteLine("Would you like to input a new file? Type 1 to restart or anything else to exit: ");
             return Console.ReadLine() == ContinueKey;
         }
 
-        public string GetValidUserInput()
+        private string[] GetFileFromUserInput()
         {
-            Console.WriteLine("Please enter a path with a valid file: ");
-            string filePath = Console.ReadLine();
+            string filePath;
+            string[] fileText;
 
-            while (!FileProcessor.IsFileValid(filePath))
+            if (Environment.GetCommandLineArgs().Length > 1)//first element is the dll
             {
-                Console.WriteLine("The given file is invalid or does not exist. Please enter a valid path or press ctrl+c to exit: ");
+                filePath = Environment.GetCommandLineArgs()[1];
+            }
+            else
+            {
+                Console.WriteLine("Please enter a path with a valid file: ");
                 filePath = Console.ReadLine();
             }
 
-            return filePath;
+            fileText = _fileProcessor.GetFileText(filePath);
+
+            while (fileText == null)
+            {
+                Console.WriteLine("The given file is invalid or does not exist. Please enter a valid path or press ctrl+c to exit: ");
+                filePath = Console.ReadLine();
+                fileText = _fileProcessor.GetFileText(filePath);
+            }
+
+            return fileText;
         }
 
+        public Program()
+        {
+            SetCulture();
+            SetEncoding();
+        }
 
-        public static void Main(string[] args)
+        private void SetCulture()
+        {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+        }
+
+        private void SetEncoding()
         {
             Console.InputEncoding = Encoding.Unicode;
             Console.OutputEncoding = Encoding.Unicode;
-            Program program = new Program();
+        }
 
-            do
-            {
-                if (args.Length > 0 && program.IsArgumentValidFile(args[0]))
-                    program.Start(args[0]);
-                else
-                    program.Start();
-            } while (program.PromptTryAgain());
+        public static void Main(string[] args)
+        {
+            Program program = new Program();
+            program.Start();
         }
     }
 }

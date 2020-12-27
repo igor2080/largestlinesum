@@ -7,21 +7,44 @@ namespace LargestLineSum
 {
     public class FileProcessor
     {
-        public string[] GetFileText { get; private set; }
-
-        public FileProcessor(string filePath)
+        public string[] GetFileText(string filePath)
         {
-            ReadFile(filePath);
+            if (IsFilePathValid(filePath) && IsFileValid(filePath))
+                return File.ReadAllLines(filePath);
+            else
+                return null;
         }
 
-        private void ReadFile(string filePath)
+        public bool IsFilePathValid(string path)
         {
-            GetFileText = File.ReadAllLines(filePath);
+            if (string.IsNullOrWhiteSpace(path))
+                return false;
+
+            string fullPath;
+            string fileName;
+
+            try
+            {
+                fullPath = Path.GetPathRoot(path);
+                fileName = Path.GetFileName(path);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(fileName))
+                return false;
+
+            if (fullPath.IndexOfAny(Path.GetInvalidPathChars()) >= 0 || fileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+                return false;
+
+            return true;
         }
 
-        public static bool IsFileValid(string path)
+        private bool IsFileValid(string path)
         {
             return File.Exists(path);
-        }        
+        }
     }
 }

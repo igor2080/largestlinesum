@@ -54,38 +54,31 @@ namespace LargestLineSum
             }
             else
             {
-                Console.WriteLine("Please enter a path with a valid file: ");
+                Console.WriteLine("Please enter a path with a valid file or press ctrl+c to exit: ");
                 filePath = Console.ReadLine();
             }
 
-            fileText = _fileProcessor.GetFileText(filePath);
-
-            while (fileText == null)
+            try
             {
-                Console.WriteLine("The given file is invalid or does not exist. Please enter a valid path or press ctrl+c to exit: ");
-                filePath = Console.ReadLine();
-                fileText = _fileProcessor.GetFileText(filePath);
+                fileText = _fileProcessor.GetLinesFromFile(filePath);
+            }
+            catch (ArgumentNullException exception)
+            {
+                Console.Write(exception.Message);
+                return GetFileFromUserInput();
+            }
+            catch (FileNotFoundException exception)
+            {
+                Console.Write(exception.Message);
+                return GetFileFromUserInput();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine($"Unexpected exception occurs {exception.Message}");
+                return GetFileFromUserInput();
             }
 
             return fileText;
-        }
-
-        public Program()
-        {
-            SetCulture();
-            SetEncoding();
-        }
-
-        private void SetCulture()
-        {
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-        }
-
-        private void SetEncoding()
-        {
-            Console.InputEncoding = Encoding.Unicode;
-            Console.OutputEncoding = Encoding.Unicode;
         }
 
         public static void Main(string[] args)

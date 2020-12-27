@@ -10,7 +10,6 @@ namespace LargestLineSumTests
     [TestClass]
     public class LineSumTests
     {
-        private Program _program;
         private const string FileName = "text.txt";        
         private LineReader _lineReader;
         private FileProcessor _fileProcessor;
@@ -18,7 +17,6 @@ namespace LargestLineSumTests
         [TestInitialize]
         public void LineSumInit()
         {
-            _program = new Program();
             _lineReader = new LineReader();
             _fileProcessor = new FileProcessor();
             File.CreateText(FileName).Close();
@@ -30,24 +28,10 @@ namespace LargestLineSumTests
             File.Delete(FileName);
         }
 
-        [TestMethod]        
-        public void IsFilePathValid_Valid_File_Paths()
-        {                                    
-            Assert.IsTrue(_fileProcessor.IsFilePathValid(FileName));
-            Assert.IsTrue(_fileProcessor.IsFilePathValid(@"c:\"+FileName));
-            Assert.IsTrue(_fileProcessor.IsFilePathValid("text"));
-        }
-
         [TestMethod]
-        public void IsFilePathValid_Invalid_File_Path()
-        {          
-            Assert.IsFalse(_fileProcessor.IsFilePathValid(FileName+@">"));
-        }
-
-        [TestMethod]
-        public void GetFileText_Valid_File()
+        public void GetLinesFromFile_Valid_File()
         {                        
-            string[] result = _fileProcessor.GetFileText(FileName);
+            string[] result = _fileProcessor.GetLinesFromFile(FileName);
             Assert.IsNotNull(result);
         }
 
@@ -68,7 +52,7 @@ namespace LargestLineSumTests
             }
             
             int expectedResult = 4;
-            string[] fileText = _fileProcessor.GetFileText(FileName);
+            string[] fileText = _fileProcessor.GetLinesFromFile(FileName);
             int actualResult = _lineReader.GetLargestLineSumLine(fileText, out List<int> invalidLines);
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -77,7 +61,7 @@ namespace LargestLineSumTests
         public void GetLargestLineSumLine_Empty_File()
         {                        
             int expectedResult = 0;
-            string[] fileText = _fileProcessor.GetFileText(FileName);
+            string[] fileText = _fileProcessor.GetLinesFromFile(FileName);
             int actualResult = _lineReader.GetLargestLineSumLine(fileText, out List<int> invalidLines);
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -95,7 +79,7 @@ namespace LargestLineSumTests
             }
             
             int expectedResult = 0;
-            string[] fileText = _fileProcessor.GetFileText(FileName);
+            string[] fileText = _fileProcessor.GetLinesFromFile(FileName);
             int actualResult = _lineReader.GetLargestLineSumLine(fileText, out List<int> invalidLines);
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -117,7 +101,7 @@ namespace LargestLineSumTests
             }
             
             var expectedResult = new List<int> { 2, 3, 5, 7, 8 };
-            string[] fileText = _fileProcessor.GetFileText(FileName);
+            string[] fileText = _fileProcessor.GetLinesFromFile(FileName);
             _lineReader.GetLargestLineSumLine(fileText, out List<int> actualResult);
             Assert.IsTrue(expectedResult.SequenceEqual(actualResult));
         }
@@ -126,7 +110,7 @@ namespace LargestLineSumTests
         public void GetLargestLineSumLine_Empty_File_Invalid_Lines()
         {                        
             var expectedResult = new List<int> { };
-            string[] fileText = _fileProcessor.GetFileText(FileName);
+            string[] fileText = _fileProcessor.GetLinesFromFile(FileName);
             _lineReader.GetLargestLineSumLine(fileText, out List<int> actualResult);
             Assert.IsTrue(expectedResult.SequenceEqual(actualResult));
         }

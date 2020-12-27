@@ -7,44 +7,20 @@ namespace LargestLineSum
 {
     public class FileProcessor
     {
-        public string[] GetFileText(string filePath)
+        public string[] GetLinesFromFile(string filePath)
         {
-            if (IsFilePathValid(filePath) && IsFileValid(filePath))
-                return File.ReadAllLines(filePath);
-            else
-                return null;
+            if (string.IsNullOrWhiteSpace(filePath))
+                throw new ArgumentNullException($"The file path is empty or null. ");
+
+            ValidateFileExistsOrThrow(filePath);
+            return File.ReadAllLines(filePath);
         }
 
-        public bool IsFilePathValid(string path)
+        private bool ValidateFileExistsOrThrow(string path)
         {
-            if (string.IsNullOrWhiteSpace(path))
-                return false;
-
-            string fullPath;
-            string fileName;
-
-            try
-            {
-                fullPath = Path.GetPathRoot(path);
-                fileName = Path.GetFileName(path);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-
-            if (string.IsNullOrWhiteSpace(fileName))
-                return false;
-
-            if (fullPath.IndexOfAny(Path.GetInvalidPathChars()) >= 0 || fileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
-                return false;
-
+            if (!File.Exists(path))
+                throw new FileNotFoundException("The given file is invalid or does not exist. ");
             return true;
-        }
-
-        private bool IsFileValid(string path)
-        {
-            return File.Exists(path);
         }
     }
 }

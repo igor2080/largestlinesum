@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace LargestLineSum
 {
@@ -28,7 +29,7 @@ namespace LargestLineSum
 
                 if (!splitLine.Any(x => !Regex.IsMatch(x, @"^-?[0-9]*\.?[0-9]+$")))
                 {
-                    currentSum = splitLine.Sum(x => double.Parse(x));
+                    currentSum = splitLine.Sum(x => double.Parse(x, CultureInfo.InvariantCulture.NumberFormat));
                     if (currentSum > largestSum)
                     {
                         largestSum = currentSum;

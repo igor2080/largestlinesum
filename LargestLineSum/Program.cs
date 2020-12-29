@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
 
 namespace LargestLineSum
 {
@@ -15,26 +10,70 @@ namespace LargestLineSum
         private readonly LineReader _lineReader = new LineReader();
         private readonly FileProcessor _fileProcessor = new FileProcessor();
 
-        public void Start()
+        public static void Main(string[] args)
         {
-            string[] currentFile;
+            Program program = new Program();
+            if (args.Length > 0)
+            {
+                program.Start(args[0]);
+            }
+            else
+            {
+                program.Start("");
+            }
+        }
+        public void Start(string arg)
+        {
             do
             {
-                currentFile = GetFileFromUserInput();
-                int largestLine = _lineReader.GetLargestLineSumLine(currentFile, out List<int> invalidLines);
+                string fileName = GetFileNameFromUserInput(arg);
+                string[] fileText=new string[] { };
+
+                try
+                {
+                    fileText = _fileProcessor.GetLinesFromFile(fileName);
+                }
+                catch (ArgumentNullException exception)
+                {
+                    Console.Write(exception.Message);
+                    Start("");
+                }
+                catch (FileNotFoundException exception)
+                {
+                    Console.Write(exception.Message);
+                    Start("");
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine($"Unexpected exception: {exception.Message}");
+                    Start("");
+                }
+
+                int largestLine = _lineReader.GetLargestLineSumLine(fileText, out List<int> invalidLines);
                 PrintStats(largestLine, invalidLines);
             }
             while (PromptTryAgain());
         }
 
-        private static void PrintStats(int largestLine, List<int> invalidLines)
+        private void PrintStats(int largestLine, List<int> invalidLines)
         {
             if (largestLine > 0)
+            {
                 Console.WriteLine($"The largest number sum was found on line {largestLine}");
+            }
             else
+            {
                 Console.WriteLine($"No lines with only numbers found");
+            }
 
-            Console.WriteLine($"The lines with bad text are: {string.Join(',', invalidLines)}");
+            if (invalidLines.Count > 0)
+            {
+                Console.WriteLine($"The lines with bad text are: {string.Join(',', invalidLines)}");
+            }
+            else
+            {
+                Console.WriteLine("There are no lines with bad text.");
+            }
         }
 
         private bool PromptTryAgain()
@@ -43,48 +82,23 @@ namespace LargestLineSum
             return Console.ReadLine() == ContinueKey;
         }
 
-        private string[] GetFileFromUserInput()
+        private string GetFileNameFromUserInput(string arg)
         {
             string filePath;
-            string[] fileText;
 
-            if (Environment.GetCommandLineArgs().Length > 1)//first element is the dll
-            {
-                filePath = Environment.GetCommandLineArgs()[1];
-            }
-            else
+            if (string.IsNullOrWhiteSpace(arg))
             {
                 Console.WriteLine("Please enter a path with a valid file or press ctrl+c to exit: ");
                 filePath = Console.ReadLine();
             }
-
-            try
+            else
             {
-                fileText = _fileProcessor.GetLinesFromFile(filePath);
-            }
-            catch (ArgumentNullException exception)
-            {
-                Console.Write(exception.Message);
-                return GetFileFromUserInput();
-            }
-            catch (FileNotFoundException exception)
-            {
-                Console.Write(exception.Message);
-                return GetFileFromUserInput();
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine($"Unexpected exception occurs {exception.Message}");
-                return GetFileFromUserInput();
+                filePath = arg;
             }
 
-            return fileText;
+            return filePath;
         }
 
-        public static void Main(string[] args)
-        {
-            Program program = new Program();
-            program.Start();
-        }
+
     }
 }

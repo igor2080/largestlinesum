@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LargestLineSum", "LargestLineSum.csproj", "{2E264233-17DD-44DB-B81D-F9F06ECF4B6B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LargestLineSumTests", "..\LargestLineSumTests\LargestLineSumTests.csproj", "{305A3BCF-2511-4ED8-BE9F-7C089C4367DA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2E264233-17DD-44DB-B81D-F9F06ECF4B6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E264233-17DD-44DB-B81D-F9F06ECF4B6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E264233-17DD-44DB-B81D-F9F06ECF4B6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E264233-17DD-44DB-B81D-F9F06ECF4B6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{305A3BCF-2511-4ED8-BE9F-7C089C4367DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{305A3BCF-2511-4ED8-BE9F-7C089C4367DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{305A3BCF-2511-4ED8-BE9F-7C089C4367DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{305A3BCF-2511-4ED8-BE9F-7C089C4367DA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D4E2F304-A71D-4513-B37F-6E243A25685E}
+	EndGlobalSection
+EndGlobal

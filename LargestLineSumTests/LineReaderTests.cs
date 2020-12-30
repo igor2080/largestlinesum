@@ -47,6 +47,21 @@ namespace LargestLineSumTests
         }
 
         [TestMethod]
+        public void GetLargestLineSumLine_Highest_Line_Sum_Two_Highest_Lines_Returns_First()
+        {
+            string[] input = new string[] {
+                    "1,2,3,4",
+                    "1,2,3",
+                    "1,2,3,4",
+                    "1,5",
+                    "e"};
+
+            int expectedResult = 1;
+            int actualResult = _lineReader.GetLargestLineSumLine(input, out List<int> invalidLines);
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestMethod]
         public void GetLargestLineSumLine_Empty_File_Highest_Line_Sum_Zero()
         {
 

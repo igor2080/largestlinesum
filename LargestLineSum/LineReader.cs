@@ -24,7 +24,7 @@ namespace LargestLineSum
                 return 0;
             }
 
-            double largestSum = 0;
+            double largestSum = double.MinValue;
             int largestSumLine = 0;
 
             for (int i = 0; i < textLines.Length; i++)

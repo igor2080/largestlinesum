@@ -31,6 +31,7 @@ namespace LargestLineSumTests
             Assert.AreEqual(expectedResult, actualResult);
         }
 
+        [TestMethod]
         public void GetLargestLineSumLine_Highest_Line_Sum_Negatives_Only()
         {
             string[] input = new string[] {

@@ -52,13 +52,13 @@ namespace LargestLineSum
 
         private void PrintStats(int largestLine, List<int> invalidLines)
         {
-            if (largestLine > 0)
+            if (largestLine == double.MinValue)
             {
-                Console.WriteLine($"The largest number sum was found on line {largestLine}");
+                Console.WriteLine($"No lines with only numbers found");
             }
             else
             {
-                Console.WriteLine($"No lines with only numbers found");
+                Console.WriteLine($"The largest number sum was found on line {largestLine}");
             }
 
             if (invalidLines.Count > 0)

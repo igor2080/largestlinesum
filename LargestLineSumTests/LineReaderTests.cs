@@ -31,6 +31,20 @@ namespace LargestLineSumTests
             Assert.AreEqual(expectedResult, actualResult);
         }
 
+        public void GetLargestLineSumLine_Highest_Line_Sum_Negatives_Only()
+        {
+            string[] input = new string[] {
+                    "-1,-2,-3,-4,-5",
+                    "-1,-2,-3,-4",
+                    "-1,-2,-3",
+                    "-1,-2",
+                    "-1"};
+
+            int expectedResult = 5;
+            int actualResult = _lineReader.GetLargestLineSumLine(input, out List<int> invalidLines);
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
         [TestMethod]
         public void GetLargestLineSumLine_Empty_File_Highest_Line_Sum_Zero()
         {

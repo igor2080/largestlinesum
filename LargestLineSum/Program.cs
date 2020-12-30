@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace LargestLineSum
 {
@@ -13,40 +14,34 @@ namespace LargestLineSum
         public static void Main(string[] args)
         {
             Program program = new Program();
-            if (args.Length > 0)
-            {
-                program.Start(args[0]);
-            }
-            else
-            {
-                program.Start("");
-            }
+            program.Start(args.FirstOrDefault());
         }
+
         public void Start(string arg)
         {
             do
             {
                 string fileName = GetFileNameFromUserInput(arg);
-                string[] fileText=new string[] { };
+                string[] fileText = new string[] { };
 
                 try
                 {
                     fileText = _fileProcessor.GetLinesFromFile(fileName);
                 }
-                catch (ArgumentNullException exception)
-                {
-                    Console.Write(exception.Message);
-                    Start("");
-                }
                 catch (FileNotFoundException exception)
                 {
                     Console.Write(exception.Message);
-                    Start("");
+                    if (PromptTryAgain())
+                    {
+                        Start("");
+                    }
+
+                    Environment.Exit(0);
                 }
                 catch (Exception exception)
                 {
                     Console.WriteLine($"Unexpected exception: {exception.Message}");
-                    Start("");
+                    Environment.Exit(1);
                 }
 
                 int largestLine = _lineReader.GetLargestLineSumLine(fileText, out List<int> invalidLines);
@@ -82,21 +77,15 @@ namespace LargestLineSum
             return Console.ReadLine() == ContinueKey;
         }
 
-        private string GetFileNameFromUserInput(string arg)
+        private string GetFileNameFromUserInput(string text)
         {
-            string filePath;
-
-            if (string.IsNullOrWhiteSpace(arg))
+            if (string.IsNullOrWhiteSpace(text))
             {
                 Console.WriteLine("Please enter a path with a valid file or press ctrl+c to exit: ");
-                filePath = Console.ReadLine();
-            }
-            else
-            {
-                filePath = arg;
+                return GetFileNameFromUserInput(Console.ReadLine());
             }
 
-            return filePath;
+            return text;
         }
 
 
